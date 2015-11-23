@@ -288,6 +288,7 @@ proc main { } {
   draw_screen
   after 500
   check_hit
+  draw_screen
   after 300 [list main]
 }
 
