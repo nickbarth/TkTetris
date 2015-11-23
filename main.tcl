@@ -280,16 +280,13 @@ bind . <Key-Right> {
   }
 }
 
-
 # Game Loop
 proc main { } {
   incr ::ypos
+  check_hit
   line_clears
   draw_screen
-  after 500
-  check_hit
-  draw_screen
-  after 300 [list main]
+  after 800 [list main]
 }
 
 # init
