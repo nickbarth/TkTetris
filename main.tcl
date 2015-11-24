@@ -29,10 +29,10 @@ set wall {
   { 0 0 0 0 0 0 0 0 0 0 }
   { 0 0 0 0 0 0 0 0 0 0 }
   { 0 0 0 0 0 0 0 0 0 0 }
-  { 0 0 1 0 0 0 0 0 0 0 }
-  { 0 0 3 5 0 0 0 0 6 1 }
-  { 0 2 2 0 0 0 0 0 4 1 }
-  { 7 7 7 2 1 1 1 1 4 1 }
+  { 0 0 0 0 0 0 0 0 0 0 }
+  { 0 0 0 0 0 0 0 0 0 0 }
+  { 0 2 5 0 0 0 0 0 4 1 }
+  { 7 7 7 2 9 0 0 1 4 1 }
 }
 
 # Tetrominos
@@ -190,7 +190,6 @@ proc generate_block {} {
   set ::xpos 3
   set ::ypos -2
   set ::block $::blocks([expr int(rand() * 7 + 1)])
-  set ::block $::blocks(3)
 }
 
 proc check_hit {} {
