@@ -1,3 +1,5 @@
+package require Tk
+
 wm title . "TkTetris"
 wm geometry . 302x660+200+100
 canvas .can -background black -width 302 -height 660
@@ -29,7 +31,7 @@ set wall {
   { 0 0 0 0 0 0 0 0 0 0 }
   { 0 0 1 0 0 0 0 0 0 0 }
   { 0 0 3 5 0 0 0 0 6 1 }
-  { 0 2 2 2 1 0 1 5 4 1 }
+  { 0 2 2 0 0 0 0 0 4 1 }
   { 7 7 7 2 1 1 1 1 4 1 }
 }
 
@@ -188,12 +190,12 @@ proc generate_block {} {
   set ::xpos 3
   set ::ypos -2
   set ::block $::blocks([expr int(rand() * 7 + 1)])
+  set ::block $::blocks(3)
 }
 
 proc check_hit {} {
   if  { [block_hit_wall] } {
-    add_current_block_to_wall
-    generate_block
+    set ::locked true
   }
 }
 
@@ -240,12 +242,17 @@ proc check_legal_move { } {
 set block $blocks(1) ;# current falling tetromino
 set xpos 0           ;# x position of falling tetromino
 set ypos 0           ;# y position of falling tetromino
+set locked false
 
 # Controls
 bind . <Key-Down> {
   incr ::ypos
-  check_hit
-  draw_screen
+  if ([check_legal_move]) {
+    check_hit
+    draw_screen
+  } else {
+    incr ::ypos -1
+  }
 }
 
 bind . <Key-Up> {
@@ -282,11 +289,19 @@ bind . <Key-Right> {
 
 # Game Loop
 proc main { } {
+  if { $::locked } {
+    add_current_block_to_wall
+    generate_block
+    set ::locked false
+  }
   incr ::ypos
-  check_hit
-  line_clears
-  draw_screen
-  after 800 [list main]
+  if ([check_legal_move]) {
+    check_hit
+    draw_screen
+  } else {
+    incr ::ypos -1
+  }
+  after 600 [list main]
 }
 
 # init
