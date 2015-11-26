@@ -240,7 +240,6 @@ proc lock_block {} {
     add_current_block_to_wall
     generate_block
     line_clears
-    set ::locked false
   } elseif { $::locked } {
    set ::locked false
   }
@@ -250,9 +249,10 @@ proc generate_block {} {
   set ::xpos 3
   set ::ypos -2
   set ::block $::blocks([expr int(rand() * 7 + 1)])
+  set ::locked false
 }
 
-# Game Vars
+# first tetromino
 set block $blocks([expr int(rand() * 7 + 1)]) ;# current falling tetromino
 set xpos 2                                    ;# x position of falling tetromino
 set ypos -2                                   ;# y position of falling tetromino
