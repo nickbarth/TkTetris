@@ -235,6 +235,8 @@ proc lock_block {} {
     generate_block
     line_clears
     set ::locked false
+  } elseif { $::locked } {
+   set ::locked false
   }
 }
 
