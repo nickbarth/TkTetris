@@ -95,6 +95,14 @@ set blocks(7) {
   { 0 7 7 0 }
 }
 
+# Game Functions
+
+proc draw_screen {} {
+  clear
+  draw_wall
+  draw_block $::xpos $::ypos $::block
+}
+
 proc clear { } {
   .can delete "all"
 }
@@ -143,12 +151,6 @@ proc rotate_block {block} {
     lset block $y [lreverse [lindex $block $y]]
   }
   return $block
-}
-
-proc draw_screen {} {
-  clear
-  draw_wall
-  draw_block $::xpos $::ypos $::block
 }
 
 proc block_hit_wall { } {
@@ -251,10 +253,10 @@ proc generate_block {} {
 }
 
 # Game Vars
-set block $blocks(1) ;# current falling tetromino
-set xpos 0           ;# x position of falling tetromino
-set ypos 0           ;# y position of falling tetromino
-set locked false
+set block $blocks([expr int(rand() * 7 + 1)]) ;# current falling tetromino
+set xpos 2                                    ;# x position of falling tetromino
+set ypos -2                                   ;# y position of falling tetromino
+set locked false                              ;# tetromino locked in place
 
 # Controls
 proc move {block x y} {
@@ -292,5 +294,4 @@ proc main { } {
 }
 
 # init
-generate_block
 main
