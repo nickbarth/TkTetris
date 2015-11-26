@@ -159,11 +159,10 @@ proc rotate_block {block} {
 }
 
 proc block_hit_wall { } {
-  #
   # 22  22000
   # 22  22000
   #     11111
-  #
+
   for {set y 0} {$y < 4} {incr y} {
     for {set x 0} {$x < 4} {incr x} {
       set cell [lindex [lindex $::block $y] $x]
