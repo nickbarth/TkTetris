@@ -134,7 +134,12 @@ proc draw_wall { } {
 
 proc rotate_block {block} {
   # Rotate 90*
-
+  
+  # -   t   r
+  # 011 000 000
+  # 001 100 001
+  # 000 110 011
+  
   # transpose
   for {set y 0} {$y < 4} {incr y} {
     for {set x 0} {$x < $y} {incr x} {
