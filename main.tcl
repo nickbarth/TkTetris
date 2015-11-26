@@ -35,6 +35,9 @@ set wall {
   { 0 0 0 0 0 0 0 0 0 0 }
 }
 
+# Tetromino Colors
+set colors { Black Cyan Yellow Purple Green Red Blue Orange }
+
 # Tetrominos
 set blocks(0) {
   { 0 0 0 0 }
@@ -99,26 +102,23 @@ proc clear { } {
 proc draw_block { xpos ypos block } {
   set xpos [expr $xpos * 30]
   set ypos [expr $ypos * 30]
-  set colors { Black Cyan Yellow Purple Green Red Blue Orange }
 
   for {set y 0} {$y < 4} {incr y} {
     for {set x 0} {$x < 4} {incr x} {
       set cell [lindex [lindex $block $y] $x]
       if {$cell != 0} {
-        .can create rectangle [expr $x*30+$xpos] [expr $y*30+$ypos] [expr $x*30+30+$xpos] [expr $y*30+30+$ypos] -outline black -fill [lindex $colors $cell]
+        .can create rectangle [expr $x*30+$xpos] [expr $y*30+$ypos] [expr $x*30+30+$xpos] [expr $y*30+30+$ypos] -outline black -fill [lindex $::colors $cell]
       }
     }
   }
 }
 
 proc draw_wall { } {
-  set colors { Black Cyan Yellow Purple Green Red Blue Orange }
-
   for {set y 0} {$y < $::height} {incr y} {
     for {set x 0} {$x < $::width} {incr x} {
       set cell [lindex [lindex $::wall $y] $x]
       if {$cell != 0} {
-        .can create rectangle [expr $x*30] [expr $y*30] [expr $x*30+30] [expr $y*30+30] -outline black -fill [lindex $colors $cell]
+        .can create rectangle [expr $x*30] [expr $y*30] [expr $x*30+30] [expr $y*30+30] -outline black -fill [lindex $::colors $cell]
       }
     }
   }
