@@ -241,7 +241,7 @@ proc check_legal_move { block xinc yinc } {
 
 proc lock_block {} {
   # if no movement for one turn and touching wall
-  # then lock
+  # then add to wall
   # else clear lock
   
   if  { [block_hit_wall] && $::locked } {
