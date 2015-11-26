@@ -149,8 +149,8 @@ proc draw_screen {} {
 
 proc block_hit_wall { } {
   #
-  # 02  02000
-  # 02  02000
+  # 22  22000
+  # 22  22000
   #     11111
   #
   for {set y 0} {$y < 4} {incr y} {
