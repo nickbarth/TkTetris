@@ -253,7 +253,7 @@ proc set_block {} {
 }
 
 # Controls
-proc move {block x y} {
+proc move { block x y } {
   if ([check_legal_move $block $x $y]) {
     incr ::ypos $y
     incr ::xpos $x
