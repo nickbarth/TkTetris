@@ -97,6 +97,13 @@ set blocks(7) {
 
 # Game Functions
 
+proc set_block {} {
+  set ::block $::blocks([expr int(rand() * 7 + 1)]) ;# current falling tetromino
+  set ::xpos 2                                      ;# x position of falling tetromino
+  set ::ypos -2                                     ;# y position of falling tetromino
+  set ::locked false                                ;# tetromino locked in place
+}
+
 proc draw_screen {} {
   clear
   draw_wall
@@ -251,13 +258,6 @@ proc lock_block {} {
   } elseif { $::locked } {
    set ::locked false
   }
-}
-
-proc set_block {} {
-  set ::block $::blocks([expr int(rand() * 7 + 1)]) ;# current falling tetromino
-  set ::xpos 2                                      ;# x position of falling tetromino
-  set ::ypos -2                                     ;# y position of falling tetromino
-  set ::locked false                                ;# tetromino locked in place
 }
 
 # Controls
