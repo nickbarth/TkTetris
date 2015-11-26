@@ -134,7 +134,7 @@ proc draw_wall { } {
 
 proc rotate_block {block} {
   # Rotate 90*
-  
+
   # transpose
   for {set y 0} {$y < 4} {incr y} {
     for {set x 0} {$x < $y} {incr x} {
@@ -145,7 +145,7 @@ proc rotate_block {block} {
       lset block $y $x $second_cell
     }
   }
-  
+
   # reverse rows
   for {set y 0} {$y < 4} {incr y} {
     lset block $y [lreverse [lindex $block $y]]
@@ -196,7 +196,7 @@ proc check_hit {} {
   }
 }
 
-proc line_clears { } {
+proc clear_lines { } {
   for {set y 0} {$y < $::height} {incr y} {
     if {[lsearch [lindex $::wall $y] 0] == -1} {
       # line cleared -- set to 0
@@ -238,25 +238,19 @@ proc check_legal_move { block xinc yinc } {
 proc lock_block {} {
   if  { [block_hit_wall] && $::locked } {
     add_current_block_to_wall
-    generate_block
-    line_clears
+    set_block
+    clear_lines
   } elseif { $::locked } {
    set ::locked false
   }
 }
 
-proc generate_block {} {
-  set ::xpos 3
-  set ::ypos -2
-  set ::block $::blocks([expr int(rand() * 7 + 1)])
-  set ::locked false
+proc set_block {} {
+  set ::block $::blocks([expr int(rand() * 7 + 1)]) ;# current falling tetromino
+  set ::xpos 2                                      ;# x position of falling tetromino
+  set ::ypos -2                                     ;# y position of falling tetromino
+  set ::locked false                                ;# tetromino locked in place
 }
-
-# first tetromino
-set block $blocks([expr int(rand() * 7 + 1)]) ;# current falling tetromino
-set xpos 2                                    ;# x position of falling tetromino
-set ypos -2                                   ;# y position of falling tetromino
-set locked false                              ;# tetromino locked in place
 
 # Controls
 proc move {block x y} {
@@ -294,4 +288,5 @@ proc main { } {
 }
 
 # init
+set_block
 main
