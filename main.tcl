@@ -31,8 +31,8 @@ set wall {
   { 0 0 0 0 0 0 0 0 0 0 }
   { 0 0 0 0 0 0 0 0 0 0 }
   { 0 0 0 0 0 0 0 0 0 0 }
-  { 0 2 5 0 0 0 0 0 4 1 }
-  { 7 7 7 2 9 0 0 1 4 1 }
+  { 0 0 0 0 0 0 0 0 0 0 }
+  { 0 0 0 0 0 0 0 0 0 0 }
 }
 
 # Tetrominos
@@ -73,16 +73,16 @@ set blocks(5) {
   { 0 0 0 0 }
 }
 set blocks(6) {
+  { 0 0 0 0 }
   { 0 0 6 0 }
   { 0 0 6 0 }
   { 0 6 6 0 }
-  { 0 0 0 0 }
 }
 set blocks(7) {
-  { 0 0 7 0 }
-  { 0 0 7 0 }
-  { 0 0 7 7 }
   { 0 0 0 0 }
+  { 0 7 0 0 }
+  { 0 7 0 0 }
+  { 0 7 7 0 }
 }
 
 proc clear { } {
@@ -134,17 +134,6 @@ proc rotate_block {block} {
   return $block
 }
 
-proc log_block { block } {
-  # Print
-  puts "----"
-  for {set y 0} {$y < 4} {incr y} {
-    for {set x 0} {$x < 4} {incr x} {
-      puts -nonewline [lindex [lindex $block $y] $x]
-    }
-    puts ""
-  }
-}
-
 proc draw_screen {} {
   clear
   draw_wall
@@ -174,22 +163,18 @@ proc add_current_block_to_wall { } {
     for {set x 0} {$x < 4} {incr x} {
       set cell [lindex [lindex $::block $y] $x]
 
-      if {[expr $y + $::ypos] <= 0} {
+      if {[expr $y + $::ypos] < 0} {
         # game over - reset game
         set ::block $::blocks(0)
         wall_clear
-      } elseif {$cell != 0} {
+      }
+
+      if {$cell != 0} {
         # add block onto wall
         lset ::wall [expr $y + $::ypos] [expr $x + $::xpos] $cell
       }
     }
   }
-}
-
-proc generate_block {} {
-  set ::xpos 3
-  set ::ypos -2
-  set ::block $::blocks([expr int(rand() * 7 + 1)])
 }
 
 proc check_hit {} {
@@ -222,12 +207,12 @@ proc wall_clear { } {
   }
 }
 
-proc check_legal_move { } {
+proc check_legal_move { block xinc yinc } {
   # disallow illegal moves
   for {set y 0} {$y < 4} {incr y} {
     for {set x 0} {$x < 4} {incr x} {
-      set cell [lindex [lindex $::block $y] $x]
-      set wall_cell [lindex [lindex $::wall [expr $y + $::ypos] [expr $x + $::xpos]]]
+      set cell [lindex [lindex $block $y] $x]
+      set wall_cell [lindex [lindex $::wall [expr $y + $::ypos + $yinc] [expr $x + $::xpos + $xinc]]]
       # hits or is outside of wall
       if {$cell != 0 && $wall_cell != 0} {
         return false
@@ -237,6 +222,21 @@ proc check_legal_move { } {
   return true
 }
 
+proc lock_block {} {
+  if  { [block_hit_wall] && $::locked } {
+    add_current_block_to_wall
+    generate_block
+    line_clears
+    set ::locked false
+  }
+}
+
+proc generate_block {} {
+  set ::xpos 3
+  set ::ypos -2
+  set ::block $::blocks([expr int(rand() * 7 + 1)])
+}
+
 # Game Vars
 set block $blocks(1) ;# current falling tetromino
 set xpos 0           ;# x position of falling tetromino
@@ -244,62 +244,37 @@ set ypos 0           ;# y position of falling tetromino
 set locked false
 
 # Controls
-bind . <Key-Down> {
-  incr ::ypos
-  if ([check_legal_move]) {
-    check_hit
-    draw_screen
-  } else {
-    incr ::ypos -1
+proc move {block x y} {
+  if ([check_legal_move $block $x $y]) {
+    incr ::ypos $y
+    incr ::xpos $x
+    set ::block $block
   }
+
+  draw_screen
+  check_hit
+}
+
+bind . <Key-Down> {
+  move $::block 0 1
 }
 
 bind . <Key-Up> {
-  set ::block [rotate_block $::block]
-  if ([check_legal_move]) {
-    check_hit
-    draw_screen
-  } else {
-    set ::block [rotate_block $::block]
-    set ::block [rotate_block $::block]
-    set ::block [rotate_block $::block]
-  }
+  move [rotate_block $::block] 0 0
 }
 
 bind . <Key-Left> {
-  incr ::xpos -1
-  if ([check_legal_move]) {
-    check_hit
-    draw_screen
-  } else {
-    incr ::xpos
-  }
+  move $::block -1 0
 }
 
 bind . <Key-Right> {
-  incr ::xpos
-  if ([check_legal_move]) {
-    check_hit
-    draw_screen
-  } else {
-    incr ::xpos -1
-  }
+  move $::block 1 0
 }
 
 # Game Loop
 proc main { } {
-  if { $::locked } {
-    add_current_block_to_wall
-    generate_block
-    set ::locked false
-  }
-  incr ::ypos
-  if ([check_legal_move]) {
-    check_hit
-    draw_screen
-  } else {
-    incr ::ypos -1
-  }
+  lock_block
+  move $::block 0 1
   after 600 [list main]
 }
 
