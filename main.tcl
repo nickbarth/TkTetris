@@ -126,6 +126,8 @@ proc draw_wall { } {
 
 proc rotate_block {block} {
   # Rotate 90*
+  
+  # transpose
   for {set y 0} {$y < 4} {incr y} {
     for {set x 0} {$x < $y} {incr x} {
       set first_cell [lindex [lindex $block $y] $x]
@@ -135,6 +137,8 @@ proc rotate_block {block} {
       lset block $y $x $second_cell
     }
   }
+  
+  # reverse rows
   for {set y 0} {$y < 4} {incr y} {
     lset block $y [lreverse [lindex $block $y]]
   }
