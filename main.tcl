@@ -98,7 +98,8 @@ set blocks(7) {
 # Game Functions
 
 proc set_block {} {
-  set ::block $::blocks([expr int(rand() * 7 + 1)]) ;# current falling tetromino
+  # initialize falling tetromino block
+  set ::block $::blocks([expr int(rand() * 7 + 1)]) ;# tetromino shape
   set ::xpos 2                                      ;# x position of falling tetromino
   set ::ypos -2                                     ;# y position of falling tetromino
   set ::locked false                                ;# tetromino locked in place
